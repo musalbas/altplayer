@@ -25,11 +25,14 @@ class Programmes:
     def pull(pid):
         url = 'https://www.bbc.co.uk/iplayer/episode/' + pid + '.json'
         json_data = json.loads(urllib2.urlopen(url).read())
+        player_data = json_data['jsConf']['player']
 
         programme = {}
-        programme['pid'] = json_data['jsConf']['player']['pid']
-        programme['title'] = json_data['jsConf']['player']['title']
-        programme['subtitle'] = json_data['jsConf']['player']['subtitle']
+
+        programme['pid'] = player_data['pid']
+        programme['title'] = player_data['title']
+        programme['subtitle'] = player_data['subtitle']
+        programme['masterbrand'] = player_data['masterbrand']
 
         return programme
 
