@@ -148,6 +148,7 @@ class _Sync:
         programmes_count = 0
         for category_id in CATEGORIES:
             programmes_count += len(self._sync_category(category_id))
+        self._print("")
         self._print("Found " + str(programmes_count) + " programmes.")
 
 

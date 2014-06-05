@@ -3,7 +3,7 @@
 {% block content %}
 
 <h1>{{ programme['title'] }}</h1>
-{% if programme['subtitle'] != None %}<h2>{{ programme['subtitle'] }}</h2>{% endif %}
+{% if programme['subtitle'] is defined %}<h2>{{ programme['subtitle'] }}</h2>{% endif %}
 
 <hr>
 
