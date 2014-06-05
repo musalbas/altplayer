@@ -132,7 +132,7 @@ class _Sync:
                 if not episodes and 'episodes' in programme:
                     programmes.append(
                         self._sync_category(programme['episodes'],
-                        episodes=True)
+                            episodes=True)
                     )
                 pid = programme['pid']
                 self._programmes_collection.update({'pid': pid}, programme,
