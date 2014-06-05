@@ -41,19 +41,43 @@ class _Sync:
         return page_num_info
 
     def _parse_programme_html(self, html):
+        html_lines = html.split('\n')
         programme = {}
 
-        programme['pid'] = re.search('/iplayer/episode/([a-z0-9]+)/', html)
+        programme['pid'] = re.search('/iplayer/episode/([a-z0-9]+)/',
+            html_lines[0])
         programme['pid'] = programme['pid'].group(1)
 
         programme['title'] = re.search('<div class="title top-title">(.+)</div>',
-            html)
+            html_lines[0])
         programme['title'] = programme['title'].group(1)
 
         episodes = re.search('/iplayer/episodes/([a-z0-9]+)">',
-            html.split('\n')[1])
+            html_lines[1])
         if episodes is not None:
             programme['episodes'] = episodes.group(1)
+
+        subtitle = re.search('<div class="subtitle"> (.*) </div>   <p',
+            html_lines[1])
+        if subtitle is not None:
+            programme['subtitle'] = subtitle.group(1)
+
+        programme['synopsis'] = re.search('<p class="synopsis"> (.*) </p> <p>',
+            html_lines[1])
+        programme['synopsis'] = programme['synopsis'].group(1)
+
+        availability = re.search('<span class="availability"> (.*) left',
+            html_lines[1])
+        if availability is not None:
+            programme['availability'] = availability.group(1)
+
+        programme['duration'] = re.search('(\d+) mins', html_lines[1])
+        programme['duration'] = programme['duration'].group(1)
+
+        brand = re.search('<span class="medium">([^<]+)',
+            html_lines[1])
+        if brand is not None:
+            programme['brand'] = brand.group(1)
 
         return programme
 
@@ -92,9 +116,10 @@ class _Sync:
 
                 programme = self._parse_programme_html(prev_programme_line
                     + '\n' + line)
-
-                programme['recency_rank'] = (page_num * 100
-                    + programme_counter)
+                
+                if not episodes:
+                    programme['recency_rank'] = (page_num * 100
+                        + programme_counter)
 
                 if not episodes:
                     programme['category'] = category_id
