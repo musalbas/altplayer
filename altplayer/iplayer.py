@@ -133,7 +133,8 @@ class _Sync:
                     + category_id + "/"
                     + str(page_num) + "/"
                     + str(programme_counter) + "/"
-                    + programme['title']
+                    + programme['title'] + "/"
+                    + (programme['subtitle'] if 'subtitle' in programme else "")
                 )
 
                 prev_programme_line = line
