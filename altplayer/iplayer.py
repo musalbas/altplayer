@@ -143,7 +143,7 @@ class _Sync:
 
             if '<li class="page focus">' in line:
                 page_nums = self._parse_page_nums_html(line)
-                page['max_page_num'] = page_nums[-1]
+                page['max_page_num'] = int(page_nums[-1])
 
         if 'max_page_num' not in page:
             page['max_page_num'] = 1
