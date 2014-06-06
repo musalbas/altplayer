@@ -34,7 +34,7 @@ class _Sync:
     _re_episodes = re.compile('/iplayer/episodes/([a-z0-9]+)">')
     _re_synopsis = re.compile('<p class="synopsis"> (.*) </p> <p>')
     _re_availability = re.compile('<span class="availability"> (.*) left')
-    _re_duration = re.compile('(\d+) mins')
+    _re_duration = re.compile('(\d+) mins?')
     _re_brand = re.compile('<span class="medium">([^<]+)')
 
     def __init__(self, programmes_collection, print_progress=False):
