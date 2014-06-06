@@ -7,19 +7,21 @@
 
 <hr>
 
-<embed
-type="application/x-shockwave-flash"
-src="http://www.bbc.co.uk/emp/9player.swf?revision=10344_10570"
-id="bbc_emp_embed_bip-play-emp"
-name="bbc_emp_embed_bip-play-emp"
-bgcolor="#000000"
-quality="high"
-wmode="default"
-allowfullscreen="true"
-allowscriptaccess="always"
-flashvars="embedReferer=&embedPageUrl=http://www.bbc.co.uk/iplayer/episode/{{ programme['pid'] }}/?t=00m01s&domId=bip-play-emp&config=http://www.bbc.co.uk/emp/iplayer/config.xml&playlist=http://www.bbc.co.uk/iplayer/playlist/{{ programme['pid'] }}&holdingImage=http://node2.bbcimg.co.uk/iplayer/images/episode/{{ programme['pid'] }}_640_360.jpg&config_settings_bitrateFloor=0&config_settings_bitrateCeiling=2500&config_settings_transportHeight=35&config_settings_cueItem=b00ldy1k:875&config_settings_showPopoutCta=false&config_messages_diagnosticsMessageBody=Insufficient bandwidth to stream this programme. Try downloading instead, or see our diagnostics page.&config_settings_language=en&guidance=unset"
-width="640"
-height="395"
->
+<div class="player_wrapper">
+    <embed
+    class="player"
+    type="application/x-shockwave-flash"
+    src="http://www.bbc.co.uk/emp/9player.swf?revision=10344_10570"
+    id="bbc_emp_embed_bip-play-emp"
+    name="bbc_emp_embed_bip-play-emp"
+    quality="high"
+    wmode="default"
+    allowfullscreen="true"
+    allowscriptaccess="always"
+    flashvars="embedReferer=&embedPageUrl=http://www.bbc.co.uk/iplayer/episode/{{ programme['pid'] }}/?t=00m01s&domId=bip-play-emp&config=http://www.bbc.co.uk/emp/iplayer/config.xml&playlist=http://www.bbc.co.uk/iplayer/playlist/{{ programme['pid'] }}&holdingImage=http://node2.bbcimg.co.uk/iplayer/images/episode/{{ programme['pid'] }}_640_360.jpg&config_settings_bitrateFloor=0&config_settings_bitrateCeiling=2500&config_settings_transportHeight=35&config_settings_cueItem=b00ldy1k:875&config_settings_showPopoutCta=false&config_messages_diagnosticsMessageBody=Insufficient bandwidth to stream this programme. Try downloading instead, or see our diagnostics page.&config_settings_language=en&guidance=unset"
+    >
+</div>
+
+<hr class="gradient">
 
 {% endblock %}
