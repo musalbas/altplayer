@@ -27,63 +27,75 @@ CATEGORIES = {
 
 class _Sync:
 
+    _re_page_num = re.compile('>(\d+)<')
+    _re_pid = re.compile('/iplayer/episode/([a-z0-9]+)/')
+    _re_title = re.compile('<div class="title top-title">(.+)</div>')
+    _re_subtitle = re.compile('<div class="subtitle"> (.*) </div>   <p')
+    _re_episodes = re.compile('/iplayer/episodes/([a-z0-9]+)">')
+    _re_synopsis = re.compile('<p class="synopsis"> (.*) </p> <p>')
+    _re_availability = re.compile('<span class="availability"> (.*) left')
+    _re_duration = re.compile('(\d+) mins')
+    _re_brand = re.compile('<span class="medium">([^<]+)')
+
     def __init__(self, programmes_collection, print_progress=False):
         self._programmes_collection = programmes_collection
         self._print_progress = print_progress
 
-    def _parse_page_num_html(self, html):
-        page_num_info = {}
-
-        max_page_num = re.findall('>\d+<', html)
-        max_page_num = int(max_page_num[-1][1:-1])
-        page_num_info['max_page_num'] = max_page_num
-
-        return page_num_info
+    def _parse_page_nums_html(self, html):
+        return self._re_page_num.findall(html)
 
     def _parse_programme_html(self, html):
-        html_lines = html.split('\n')
+        lines = html.split('\n')
         programme = {}
 
-        programme['pid'] = re.search('/iplayer/episode/([a-z0-9]+)/',
-            html_lines[0])
-        programme['pid'] = programme['pid'].group(1)
+        programme['pid'] = self._re_pid.search(lines[0]).group(1)
 
-        programme['title'] = re.search('<div class="title top-title">(.+)</div>',
-            html_lines[0])
-        programme['title'] = programme['title'].group(1)
+        programme['title'] = self._re_title.search(lines[0]).group(1)
 
-        episodes = re.search('/iplayer/episodes/([a-z0-9]+)">',
-            html_lines[1])
-        if episodes is not None:
-            programme['episodes'] = episodes.group(1)
+        episodes_search = self._re_episodes.search(lines[1])
+        if episodes_search is not None:
+            programme['episodes'] = episodes_search.group(1)
 
-        subtitle = re.search('<div class="subtitle"> (.*) </div>   <p',
-            html_lines[1])
-        if subtitle is not None:
-            programme['subtitle'] = subtitle.group(1)
+        subtitle_search = self._re_subtitle.search(lines[1])
+        if subtitle_search is not None:
+            programme['subtitle'] = subtitle_search.group(1)
 
-        programme['synopsis'] = re.search('<p class="synopsis"> (.*) </p> <p>',
-            html_lines[1])
-        programme['synopsis'] = programme['synopsis'].group(1)
+        programme['synopsis'] = self._re_synopsis.search(lines[1]).group(1)
 
-        availability = re.search('<span class="availability"> (.*) left',
-            html_lines[1])
-        if availability is not None:
-            programme['availability'] = availability.group(1)
+        availability_search = self._re_availability.search(lines[1])
+        if availability_search is not None:
+            programme['availability'] = availability_search.group(1)
 
-        programme['duration'] = re.search('(\d+) mins', html_lines[1])
-        programme['duration'] = programme['duration'].group(1)
+        programme['duration'] = self._re_duration.search(lines[1]).group(1)
 
-        brand = re.search('<span class="medium">([^<]+)',
-            html_lines[1])
-        if brand is not None:
-            programme['brand'] = brand.group(1)
+        brand_search = self._re_brand.search(lines[1])
+        if brand_search is not None:
+            programme['brand'] = brand_search.group(1)
 
         return programme
 
     def _print(self, output):
         if self._print_progress:
             print(output)
+
+    def _programme_string(self, programme):
+        string = ''
+        
+        if 'category' in programme:
+            string += programme['category'] + '/'
+        else:
+            string += '\t/'
+
+        if 'episodes' in programme:
+            string += programme['episodes'] + '/'
+
+        string += programme['pid'] + '/'
+        string += programme['title'] + '/'
+
+        if 'subtitle' in programme:
+            string += programme['subtitle'] + '/'
+
+        return string
 
     def _pull_category_page(self, category_id, page_num, episodes=False):
         if not episodes:
@@ -101,10 +113,8 @@ class _Sync:
         programme_counter = 0
         prev_programme_line = ''
         for line in data.split('\n'):
-
             if ('<div class="play-icon">' in line
                 or '<div id="blq-content"' in line):
-
                 if prev_programme_line == '':
                     prev_programme_line = line
                     continue
@@ -127,21 +137,13 @@ class _Sync:
                     programme['episodes'] = category_id
 
                 page['programmes'].append(programme)
-
-                self._print(
-                    ("  " if episodes else "")
-                    + category_id + "/"
-                    + str(page_num) + "/"
-                    + str(programme_counter) + "/"
-                    + programme['title'] + "/"
-                    + (programme['subtitle'] if 'subtitle' in programme else "")
-                )
-
                 prev_programme_line = line
 
+                self._print(self._programme_string(programme))
+
             if '<li class="page focus">' in line:
-                page_num_info = self._parse_page_num_html(line)
-                page['max_page_num'] = page_num_info['max_page_num']
+                page_nums = self._parse_page_nums_html(line)
+                page['max_page_num'] = page_nums[-1]
 
         if 'max_page_num' not in page:
             page['max_page_num'] = 1
@@ -154,18 +156,24 @@ class _Sync:
         while True:
             page = self._pull_category_page(category_id, page_counter,
                 episodes)
+
             for programme in page['programmes']:
                 if not episodes and 'episodes' in programme:
                     programmes.append(
                         self._sync_category(programme['episodes'],
                             episodes=True)
                     )
+
                 pid = programme['pid']
+
                 self._programmes_collection.update({'pid': pid}, programme,
                     upsert=True)
+
                 programmes.append(programme)
+
             if page['max_page_num'] == page_counter:
                 break
+
             page_counter += 1
 
         return programmes
@@ -174,6 +182,7 @@ class _Sync:
         programmes_count = 0
         for category_id in CATEGORIES:
             programmes_count += len(self._sync_category(category_id))
+
         self._print("")
         self._print("Found " + str(programmes_count) + " programmes.")
 
