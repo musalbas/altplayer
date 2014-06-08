@@ -24,4 +24,8 @@
 
 <hr class="gradient">
 
+<p>{{ programme['synopsis'] }}</p>
+
+<p>{{ programme['duration'] }} minutes long. {% if programme['availability'] is defined %}Available to watch for {{ programme['availability'] }}.{% endif %}</p>
+
 {% endblock %}
