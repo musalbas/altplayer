@@ -21,7 +21,7 @@ def view_programme(pid):
         abort(404)
 
 @app.route('/categories/<category>')
-def view_category(category):
+def view_category(category, episodes=False):
     order = request.args.get('order')
     if order is None:
         order = 'recent'
@@ -37,7 +37,11 @@ def view_category(category):
         except ValueError:
             abort(404)
 
-    programmes = db.programmes.find({'category': category})
+    if not episodes:
+        programmes = db.programmes.find({'category': category})
+    else:
+        programmes = db.programmes.find({'episodes': category})
+
     programmes_count = programmes.count()
 
     if programmes_count == 0:
@@ -57,13 +61,23 @@ def view_category(category):
 
     episodes_count = {}
 
-    for programme in programmes:
-        if 'episodes' not in programme:
-            continue
-        episodes = db.programmes.find({'episodes': programme['episodes']})
-        episodes_count[programme['episodes']] = episodes.count()
+    if not episodes:
+        for programme in programmes:
+            if 'episodes' not in programme:
+                continue
+            episodes = db.programmes.find({'episodes': programme['episodes']})
+            episodes_count[programme['episodes']] = episodes.count()
+
+    if not episodes:
+        category_name = CATEGORIES[category]
+    else:
+        category_name = programmes[0]['title']
 
     return render_template('categories.html', programmes=programmes,
         num_pages=num_pages, category=category, page=page,
-        category_name=CATEGORIES[category], episodes_count=episodes_count)
+        category_name=category_name, episodes_count=episodes_count)
+
+@app.route('/episodes/<episodes>')
+def view_episodes(episodes):
+    return view_category(episodes, episodes=True)
 
