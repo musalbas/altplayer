@@ -35,3 +35,49 @@ hr.gradient {
     margin: 0 auto;
 }
 
+.category_programme_block_wrapper {
+    margin-bottom: 5px;
+}
+
+.category_programme_block_wrapper:hover {
+    background-color: #dddddd;
+}
+
+.category_programme_block {
+    clear: both;
+    display: block;
+    height: 117px;
+}
+
+.category_programme_block_img_wrapper {
+    float: left;
+}
+
+.category_programme_block_img_wrapper img {
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+.category_programme_block_info {
+    float: left;
+    margin-left: 10px;
+}
+
+.category_programme_block_title {
+    color: #336699;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.category_programme_block_subtitle {
+    color: #336699;
+    font-size: 14px;
+}
+
+.category_programme_block_synopsis {
+    width: 580px;
+    display: block;
+    margin-top: 7px;
+    color: #666666;
+}

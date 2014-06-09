@@ -7,7 +7,30 @@
 <hr>
 
 {% for programme in programmes %}
-    {{ programme['title'] }}
+
+<div class="category_programme_block_wrapper">
+
+    <a href="{{ url_for('view_programme', pid=programme['pid']) }}">
+
+        <span class="category_programme_block">
+
+            <div class="category_programme_block_img_wrapper">
+                <img src="http://ichef.bbci.co.uk/images/ic/208x117/{{ programme['imgid'] }}.jpg" width="208" height="117">
+            </div>
+
+            <div class="category_programme_block_info">
+                <div class="category_programme_block_title">{{ programme['title'] }}</div>
+                <div class="category_programme_block_subtitle">{{ programme['subtitle'] }}</div>
+                <span class="category_programme_block_synopsis">{{ programme['synopsis'] }}</span>
+                <span class="category_programme_block_synopsis">{{ programme['duration'] }} minutes long. Available to watch for {{ programme['availability'] }}.</span>
+            </div>
+
+        </span>
+
+    </a>
+
+</div>
+
 {% endfor %}
 
 {% endblock %}
