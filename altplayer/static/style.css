@@ -36,7 +36,7 @@ hr.gradient {
 }
 
 .category_programme_block_wrapper {
-    margin-bottom: 5px;
+    margin-top: 5px;
 }
 
 .category_programme_block_wrapper:hover {
@@ -80,4 +80,12 @@ hr.gradient {
     display: block;
     margin-top: 7px;
     color: #666666;
+}
+
+.category_programme_block_episodes {
+    float: right;
+}
+
+.clear {
+    clear: both;
 }

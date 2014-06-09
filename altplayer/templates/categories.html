@@ -22,7 +22,7 @@
                 <div class="category_programme_block_title">{{ programme['title'] }}</div>
                 <div class="category_programme_block_subtitle">{{ programme['subtitle'] }}</div>
                 <span class="category_programme_block_synopsis">{{ programme['synopsis'] }}</span>
-                <span class="category_programme_block_synopsis">{{ programme['duration'] }} minutes long. Available to watch for {{ programme['availability'] }}.</span>
+                <span class="category_programme_block_synopsis">{{ programme['duration'] }} minutes long. {% if programme['availability'] is defined %}Available to watch for {{ programme['availability'] }}.{% endif %}</span>
             </div>
 
         </span>
@@ -30,6 +30,11 @@
     </a>
 
 </div>
+
+{% if programme['episodes'] is defined and not episodes %}
+<div class="category_programme_block_episodes"><a href="{{ url_for('view_episodes', episodes=programme['episodes']) }}">{{ episodes_count[programme['episodes']] }} episode{% if episodes_count[programme['episodes']] != 1 %}s{% endif %} available.</a></div>
+<div class="clear"></div>
+{% endif %}
 
 {% endfor %}
 

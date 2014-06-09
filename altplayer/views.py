@@ -65,8 +65,9 @@ def view_category(category, episodes=False):
         for programme in programmes:
             if 'episodes' not in programme:
                 continue
-            episodes = db.programmes.find({'episodes': programme['episodes']})
-            episodes_count[programme['episodes']] = episodes.count()
+            find_document = {'episodes': programme['episodes']}
+            episodes_cursor = db.programmes.find(find_document)
+            episodes_count[programme['episodes']] = episodes_cursor.count()
 
     if not episodes:
         category_name = CATEGORIES[category]
@@ -75,7 +76,8 @@ def view_category(category, episodes=False):
 
     return render_template('categories.html', programmes=programmes,
         num_pages=num_pages, category=category, page=page,
-        category_name=category_name, episodes_count=episodes_count)
+        category_name=category_name, episodes_count=episodes_count,
+        episodes=episodes)
 
 @app.route('/episodes/<episodes>')
 def view_episodes(episodes):
