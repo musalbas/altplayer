@@ -7,7 +7,7 @@
 <hr>
 
 {% for programme in programmes %}
-    {% include "programme_block.html" %}
+    {{ programme['title'] }}
 {% endfor %}
 
 {% endblock %}
