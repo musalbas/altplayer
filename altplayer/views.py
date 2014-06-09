@@ -22,11 +22,14 @@ def view_programme(pid):
 
 @app.route('/categories/<category>')
 def view_category(category, episodes=False):
-    order = request.args.get('order')
-    if order is None:
-        order = 'recent'
-    elif order not in ('atoz', 'recent'):
-        abort(404)
+    if not episodes:
+        order = request.args.get('order')
+        if order is None:
+            order = 'recent'
+        elif order not in ('atoz', 'recent'):
+            abort(404)
+    else:
+        order = 'atoz'
 
     page = request.args.get('page')
     if page is None:
@@ -53,7 +56,10 @@ def view_category(category, episodes=False):
     programmes = programmes.limit(PAGE_SIZE)
 
     if order == 'atoz':
-        programmes = programmes.sort('title', 1)
+        if not episodes:
+            programmes = programmes.sort('title', 1)
+        else:
+            programmes = programmes.sort('subtitle', 1)
     elif order == 'recent':
         programmes = programmes.sort('recency_rank', 1)
 
