@@ -6,6 +6,10 @@ h1, h2 {
     color: #336699;
 }
 
+a, a:visited, a:hover, a:active {
+    color: inherit;
+}
+
 hr {
     border: none;
     height: 1px;
