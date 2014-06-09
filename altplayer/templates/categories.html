@@ -6,6 +6,14 @@
 
 <hr>
 
+{% if not episodes %}
+<div class="category_order_by">
+    {% if order == 'recent' %}<strong>Most recent</strong>{% else %}<a href="{{ url_for('view_category', category=category) }}">Most recent</a>{% endif %} |
+    {% if order == 'atoz' %}<strong>A-Z</strong>{% else %}<a href="{{ url_for('view_category', category=category) }}?order=atoz">A-Z</a>{% endif %}
+</div>
+<div class="clear"></div>
+{% endif %}
+
 {% for programme in programmes %}
 
 <div class="category_programme_block_wrapper">

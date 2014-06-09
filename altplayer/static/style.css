@@ -89,3 +89,7 @@ hr.gradient {
 .clear {
     clear: both;
 }
+
+.category_order_by {
+    float: right;
+}

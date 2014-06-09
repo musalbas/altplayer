@@ -77,7 +77,7 @@ def view_category(category, episodes=False):
     return render_template('categories.html', programmes=programmes,
         num_pages=num_pages, category=category, page=page,
         category_name=category_name, episodes_count=episodes_count,
-        episodes=episodes)
+        episodes=episodes, order=order)
 
 @app.route('/episodes/<episodes>')
 def view_episodes(episodes):
