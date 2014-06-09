@@ -55,7 +55,15 @@ def view_category(category):
 
     programmes = list(programmes)
 
+    episodes_count = {}
+
+    for programme in programmes:
+        if 'episodes' not in programme:
+            continue
+        episodes = db.programmes.find({'episodes': programme['episodes']})
+        episodes_count[programme['episodes']] = episodes.count()
+
     return render_template('categories.html', programmes=programmes,
         num_pages=num_pages, category=category, page=page,
-        category_name=CATEGORIES[category])
+        category_name=CATEGORIES[category], episodes_count=episodes_count)
 
