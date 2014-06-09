@@ -46,4 +46,32 @@
 
 {% endfor %}
 
+<hr>
+
+<div id="pagination_wrapper">
+    <div id="tnt_pagination">
+
+        {% if page == 1 %}
+        <span class="disabled_tnt_pagination">Prev</span>
+        {% else %}
+        <a href="{% if not episodes %}{{ url_for('view_category', category=category) }}{% else %}{{ url_for('view_episodes', episodes=category) }}{% endif %}?{% if not episodes %}order={{ order }}&{% endif %}page={{ page - 1 }}">Prev</a>
+        {% endif %}
+
+        {% for n in range(1, num_pages + 1) %}
+        {% if n == page %}
+        <span class="active_tnt_link">{{ n }}</span>
+        {% else %}
+        <a href="{% if not episodes %}{{ url_for('view_category', category=category) }}{% else %}{{ url_for('view_episodes', episodes=category) }}{% endif %}?{% if not episodes %}order={{ order }}&{% endif %}page={{ n }}">{{ n }}</a>
+        {% endif %}
+        {% endfor %}
+
+        {% if page == num_pages %}
+        <span class="disabled_tnt_pagination">Next</span>
+        {% else %}
+        <a href="{% if not episodes %}{{ url_for('view_category', category=category) }}{% else %}{{ url_for('view_episodes', episodes=category) }}{% endif %}?{% if not episodes %}order={{ order }}&{% endif %}page={{ page + 1 }}">Next</a>
+        {% endif %}
+
+    </div>
+</div>
+
 {% endblock %}
