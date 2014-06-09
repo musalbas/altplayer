@@ -36,7 +36,7 @@ class _Sync:
     _re_availability = re.compile('<span class="availability"> (.*) left')
     _re_duration = re.compile('(\d+) mins?')
     _re_brand = re.compile('<span class="medium">([^<]+)')
-    _re_imgid = re.compile('http://ichef\.bbci\.co\.uk/images/ic/336x189/(legacy/episode/)?([a-z0-9]+)\.jpg')
+    _re_imgid = re.compile('http://ichef\.bbci\.co\.uk/images/ic/336x189/(legacy/episode/[a-z0-9]+|[a-z0-9]+)\.jpg')
 
     def __init__(self, programmes_collection, print_progress=False):
         self._programmes_collection = programmes_collection
